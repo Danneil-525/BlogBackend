@@ -25,7 +25,8 @@ class HomeController extends Controller {
 
   async getArticleById() {
     const { ctx } = this;
-    const id = this.ctx.params.id;
+    const id = ctx.query.id;
+    console.log(ctx.query.id);
     const sql = `
     SELECT article.id,
       title,
@@ -33,8 +34,8 @@ class HomeController extends Controller {
       article_content,
       addTime,
       view_count,
-      typeName,
-      type.id as typeId,
+      type.typeName,
+      type.id as typeId
       FROM article LEFT JOIN type ON article.type_id = type.id
       WHERE article.id=${id}
     `;
