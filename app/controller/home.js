@@ -19,14 +19,12 @@ class HomeController extends Controller {
       FROM article LEFT JOIN type ON article.type_id = type.id
       `;
     const res = await this.app.mysql.query(sql);
-    console.log(res);
     ctx.body = { data: res };
   }
 
   async getArticleById() {
     const { ctx } = this;
     const id = ctx.query.id;
-    console.log(ctx.query.id);
     const sql = `
     SELECT article.id,
       title,
@@ -44,8 +42,26 @@ class HomeController extends Controller {
   }
 
   async getTypeInfo() {
+    const { ctx } = this;
     const res = await this.app.mysql.select('type');
-    this.ctx.body = { data: res };
+    ctx.body = { data: res };
+  }
+
+
+  // 根据类别ID获得文章列表
+  async getArticleListById() {
+    const id = this.ctx.query.id;
+    const sql = `SELECT article.id as id, 
+      article.title as title, 
+      article.introduce as introduce, 
+      article.addTime as addTime,
+      article.view_count as view_count, 
+      type.typeName as typeName  
+      FROM article LEFT JOIN type ON article.type_id = type.id  
+      WHERE type_id="${id}"
+      `;
+    const result = await this.app.mysql.query(sql);
+    this.ctx.body = { data: result };
   }
 }
 
